@@ -8,41 +8,19 @@ import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
+import {add_Invoice} from '../redux/actions/actionTypes';
+import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
+import { STATE } from '../constants';
 
 class InvoiceForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isOpen: false,
-      currency: '$',
-      currentDate: '',
-      invoiceNumber: 1,
-      dateOfIssue: '',
-      billTo: '',
-      billToEmail: '',
-      billToAddress: '',
-      billFrom: '',
-      billFromEmail: '',
-      billFromAddress: '',
-      notes: '',
-      total: '0.00',
-      subTotal: '0.00',
-      taxRate: '',
-      taxAmmount: '0.00',
-      discountRate: '',
-      discountAmmount: '0.00'
-    };
-    this.state.items = [
-      {
-        id: 0,
-        name: '',
-        description: '',
-        price: '1.00',
-        quantity: 1
-      }
-    ];
+    this.state = STATE;
     this.editField = this.editField.bind(this);
   }
+
+  
   componentDidMount(prevProps) {
     this.handleCalculateTotal()
   }
@@ -118,6 +96,10 @@ class InvoiceForm extends React.Component {
   openModal = (event) => {
     event.preventDefault()
     this.handleCalculateTotal()
+    // Dispatch an action to update the Redux store with the form data
+    this.props.add_Invoice(this.state);
+
+    this.setState({ isOpen: true });
     this.setState({isOpen: true})
   };
   closeModal = (event) => this.setState({isOpen: false});
@@ -127,9 +109,9 @@ class InvoiceForm extends React.Component {
         <Col md={8} lg={9}>
           <Card className="p-4 p-xl-5 my-3 my-xl-4">
             <div className="d-flex flex-row align-items-start justify-content-between mb-3">
-              <div class="d-flex flex-column">
+              <div className="d-flex flex-column">
                 <div className="d-flex flex-column">
-                  <div class="mb-2">
+                  <div className="mb-2">
                     <span className="fw-bold">Current&nbsp;Date:&nbsp;</span>
                     <span className="current-date">{new Date().toLocaleDateString()}</span>
                   </div>
@@ -205,7 +187,7 @@ class InvoiceForm extends React.Component {
         </Col>
         <Col md={4} lg={3}>
           <div className="sticky-top pt-md-3 pt-xl-4">
-            <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
+            <Link to='/'><Button variant="primary" type="submit" className="d-block w-100">All Invoice List</Button></Link>
             <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Currency:</Form.Label>
@@ -238,6 +220,7 @@ class InvoiceForm extends React.Component {
                 </InputGroup.Text>
               </InputGroup>
             </Form.Group>
+            <Button variant="primary" type="submit" className="d-block w-100">Review and Save Invoice</Button>
           </div>
         </Col>
       </Row>
@@ -245,4 +228,14 @@ class InvoiceForm extends React.Component {
   }
 }
 
-export default InvoiceForm;
+//use mapStateToProps and mapDispatchToProps to connect to the store:
+const mapStateToProps = (state) => ({
+  invoiceData: state.invoiceData,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  add_Invoice: (data) => dispatch(add_Invoice(data)),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(InvoiceForm);

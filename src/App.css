@@ -22,6 +22,78 @@ html,
   color: #61dafb;
 }
 
+.App {
+  background: url(background-img.jpeg) no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+  overflow: hidden;
+}
+
+.createBtn {
+  position: absolute;
+  right: 100px;
+}
+
+.list {
+  margin-top: 100px;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 50px;
+}
+
+.right{
+  position: absolute;
+  right: 0px;
+}
+
+h2 {
+  text-align: center;
+}
+
+.invoice_item {
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.invoice_item div{
+  width: 90%;
+  margin: auto auto;
+  margin-top: 4px;
+  position: relative;
+  font-family: sans-serif;
+}
+
+.invoice_item:nth-child(even) {
+  background-color: rgb(251, 251, 202);
+  opacity: 0.8;
+}
+
+.invoice_item:nth-child(odd) {
+  background-color: #bce17d;
+  opacity: 0.8;
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+  color: rebeccapurple;
+}
+
+.image{
+  height: 15px;
+  margin-left: 10px;
+}
+
+.image:hover{
+  cursor: pointer;
+}
+
 .btn-light {
   border-color: #dedede
 }
