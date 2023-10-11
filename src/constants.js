@@ -2,7 +2,7 @@ export const STATE = {
     isOpen: false,
     currency: '$',
     currentDate: '',
-    invoiceNumber: 1,
+    invoiceNumber: 0,
     dateOfIssue: '',
     billTo: '',
     billToEmail: '',
@@ -22,8 +22,8 @@ export const STATE = {
         id: 0,
         name: '',
         description: '',
-        price: '1.00',
-        quantity: 1
+        price: '0.00',
+        quantity: 0
       }
     ]
 };

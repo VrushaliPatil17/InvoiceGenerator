@@ -8,7 +8,8 @@ const persistConfig = {
     key: 'root',
     storage,
 }
-  
+
+// persisting redux state between page reloads
 const persistedReducer = persistReducer(persistConfig, invoiceReducer)
   
 export const store = configureStore({

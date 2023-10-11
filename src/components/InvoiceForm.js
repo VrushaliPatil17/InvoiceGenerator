@@ -8,15 +8,25 @@ import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
-import {add_Invoice} from '../redux/actions/actionTypes';
+import { add_Invoice, edit_Invoice } from '../redux/actions/actionTypes';
 import { connect } from 'react-redux';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { STATE } from '../constants';
 
 class InvoiceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = STATE;
+    this.submitName = "Review and Save Invoice";
+    // check if user editing existing invoice
+    this.editMode = window.location.pathname.includes('edit-invoice');
+    if(this.editMode) {
+      // get last digits to identify invoice number
+      const editInvoiceNumber = window.location.pathname.slice(14);
+      const editInvoiceItem = props.invoiceData.filter(item => item.invoiceNumber == editInvoiceNumber)[0];
+      this.state = editInvoiceItem;
+      this.submitName = "Update Invoice";
+    } 
     this.editField = this.editField.bind(this);
   }
 
@@ -84,25 +94,36 @@ class InvoiceForm extends React.Component {
     this.setState({items: newItems});
     this.handleCalculateTotal();
   };
+
   editField = (event) => {
     this.setState({
       [event.target.name]: event.target.value
     });
     this.handleCalculateTotal();
   };
+
   onCurrencyChange = (selectedOption) => {
     this.setState(selectedOption);
   };
+
+  invoiceNumberValidate = (event) => {
+    const exist = this.props.invoiceData.some(item => item.invoiceNumber == event.target.value);
+    exist ? alert("Invoice number " + event.target.value + " already exist") : this.editField(event) ;
+  }
+
   openModal = (event) => {
     event.preventDefault()
     this.handleCalculateTotal()
     // Dispatch an action to update the Redux store with the form data
-    this.props.add_Invoice(this.state);
-
+    this.editMode ? this.props.edit_Invoice(this.state) : this.props.add_Invoice(this.state);
     this.setState({ isOpen: true });
-    this.setState({isOpen: true})
   };
-  closeModal = (event) => this.setState({isOpen: false});
+
+  closeModal = (event) => {
+    this.setState({isOpen: false});
+    this.setState(STATE);
+  };
+
   render() {
     return (<Form onSubmit={this.openModal}>
       <Row>
@@ -125,7 +146,7 @@ class InvoiceForm extends React.Component {
               </div>
               <div className="d-flex flex-row align-items-center">
                 <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
-                <Form.Control type="number" value={this.state.invoiceNumber} name={"invoiceNumber"} onChange={(event) => this.editField(event)} min="1" style={{
+                <Form.Control type="number" value={this.state.invoiceNumber} name={"invoiceNumber"} onChange={(event) => this.invoiceNumberValidate(event)} min="1" style={{
                     maxWidth: '70px'
                   }} required="required"/>
               </div>
@@ -220,7 +241,7 @@ class InvoiceForm extends React.Component {
                 </InputGroup.Text>
               </InputGroup>
             </Form.Group>
-            <Button variant="primary" type="submit" className="d-block w-100">Review and Save Invoice</Button>
+            <Button variant="primary" type="submit" className="d-block w-100">{this.submitName}</Button>
           </div>
         </Col>
       </Row>
@@ -235,6 +256,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   add_Invoice: (data) => dispatch(add_Invoice(data)),
+  edit_Invoice: (data) => dispatch(edit_Invoice(data)),
 });
 
 

@@ -1,16 +1,21 @@
 
 export const Invoice = (props) => {
 
-    const {item, view} = props;
+    const {item, view, edit, remove} = props;
     return (    
         <div className="invoice_item">
-            <div>Invoice No: {item.invoiceNumber} <span className="right">Date: {item.dateOfIssue} </span> </div>
+            <div>Date : {item.dateOfIssue} </div>
+            <div><b>Invoice No: {item.invoiceNumber}</b> <span className="right">Total: {item.currency}{item.total} </span> </div>
             <div>From : {item.billFrom} <span className="right">To:  {item.billTo} </span> </div>
-            <div >{item.billFromEmail}<span className="right">{item.billToEmail} </span> </div> 
+            {
+                item.items.map(el => {
+                    return <div key={el.id}> {el.description.toUpperCase()} - {el.quantity}   <span className="right">{item.currency}{el.price} </span> </div> 
+                })
+            }
             <div className="action"> 
-                <img className="image" onClick={view} src="https://www.svgrepo.com/show/513026/view-close-818.svg" />
-                <img className="image"  src="https://www.svgrepo.com/show/511904/edit-1479.svg" />
-                <img className="image"  src="https://www.svgrepo.com/show/500534/delete-filled.svg" />
+                <img className="image" onClick={view} src="https://www.svgrepo.com/show/513026/view-close-818.svg" alt="view button"/>
+                <img className="image" onClick={edit} src="https://www.svgrepo.com/show/511904/edit-1479.svg" alt="edit button"/>
+                <img className="image" onClick={remove} src="https://www.svgrepo.com/show/500534/delete-filled.svg" alt="delete button"/>
             </div> 
         </div>
     )

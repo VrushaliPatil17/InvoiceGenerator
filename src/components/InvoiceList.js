@@ -3,26 +3,48 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Invoice } from './Invoice';
 import Button from 'react-bootstrap/Button';
 import InvoiceModal from './InvoiceModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { STATE } from '../constants';
+import { useNavigate } from "react-router-dom";
+import {delete_Invoice} from '../redux/actions/actionTypes';
 
 export default function InvoiceList() {
 
     const invoices_state = useSelector((state) => state.invoiceData);
     const dispatch = useDispatch();
-    console.log("State - ", invoices_state);
+    const navigate = useNavigate();
     const [view, setView] = useState(false);
-    const [state, setState] = useState(STATE)
+    const [state, setState] = useState(STATE);
+    const [reload, setReload] = useState(false);
 
-    const viewInvoice = (props) => {
-        setState(props);
+    useEffect(() => {},[reload]);
+
+    const viewInvoice = (item) => {
+        setState(item);
         setView(true);
     }
 
     const closeInvoice = () => setView(false);
 
+    const deleteInvoice = (item) => {
+        dispatch(delete_Invoice(item));
+        setReload(!reload);
+    }
+
+    const editInvoice = (item) => {
+        navigate(`/edit-invoice/${item.invoiceNumber}`);
+    }
+
     const DisplayInvoices = () => {
-        return invoices_state.map((item, index) => <Invoice key={index} item={item} view={() => viewInvoice(item)} />);
+        console.log("Reload - ", reload);
+        return invoices_state.map((item, index) => 
+                <Invoice key={index} 
+                    item={item} 
+                    view={() => viewInvoice(item)} 
+                    edit={() => editInvoice(item)}
+                    remove={() => deleteInvoice(item)}
+                />
+            );
     }
 
     return (
