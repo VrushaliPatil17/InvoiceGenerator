@@ -29,6 +29,14 @@ html,
   overflow: hidden;
 }
 
+h1 {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 50px;
+}
+
 .createBtn {
   position: absolute;
   right: 100px;
@@ -36,14 +44,6 @@ html,
 
 .list {
   margin-top: 100px;
-}
-
-h1 {
-  text-align: center;
-  color: white;
-  font-weight: bold;
-  font-style: italic;
-  font-size: 50px;
 }
 
 .right{

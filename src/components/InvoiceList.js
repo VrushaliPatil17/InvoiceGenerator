@@ -36,7 +36,6 @@ export default function InvoiceList() {
     }
 
     const DisplayInvoices = () => {
-        console.log("Reload - ", reload);
         return invoices_state.map((item, index) => 
                 <Invoice key={index} 
                     item={item} 
